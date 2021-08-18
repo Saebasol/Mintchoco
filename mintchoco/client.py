@@ -13,8 +13,6 @@ from mintchoco.model import (
 )
 
 
-
-
 class Client:
     BASE_URL = "https://heliotrope.me/"
     API_VERSION = "v5"
@@ -22,10 +20,8 @@ class Client:
     API_URL = BASE_URL + API_VERSION
     def __init__(
         self,
-        hiyobot: Optional[str] = None,
         client_session: Optional[ClientSession] = None,
     ) -> None:
-        self.hiyobot = hiyobot
         self.client_session = client_session
 
     async def request(
@@ -37,9 +33,6 @@ class Client:
 
         if not self.client_session:
             self.client_session = ClientSession()
-
-        if self.hiyobot:
-            self.client_session.headers.update({"hiyobot": self.hiyobot})
 
         async with self.client_session.request(method, url, json=json) as r:
             return await r.json()
