@@ -13,5 +13,6 @@ setup(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),  # type: ignore
     description="Heliotrope python wrapper",
+    package_data={"mintchoco": ["py.typed"]},
     python_requires=">=3.9",
 )
