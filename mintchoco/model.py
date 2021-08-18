@@ -93,8 +93,8 @@ class HeliotropeFile:
         return self.__file["name"]
 
     @property
-    def image(self) -> str:
-        return self.__file["image"]
+    def url(self) -> str:
+        return self.__file["url"]
 
 
 class HeliotropeGalleryInfo(BaseHeliotrope):
