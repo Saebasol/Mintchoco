@@ -1,5 +1,5 @@
 from types import TracebackType
-from typing import Any, Literal, Optional
+from typing import Any, List, Literal, Optional
 from aiohttp import ClientSession
 
 from mintchoco.model.galleryinfo import Galleryinfo
@@ -34,9 +34,9 @@ class Client:
         )
         return Galleryinfo.from_dict(resp)
 
-    async def image(self, index: int) -> list[Image]:
+    async def image(self, index: int) -> List[Image]:
         resp = await self.request("GET", f"/hitomi/image/{index}")
-        image_list: list[HeliotropeImageJSON] = [x for x in resp["files"]]
+        image_list: List[HeliotropeImageJSON] = [x for x in resp["files"]]
         return [Image.from_dict(image) for image in image_list]
 
     async def info(self, index: int) -> Info:
