@@ -52,6 +52,18 @@ class Client:
         resp: HitomiInfoJSON = await self.request("GET", "/hitomi/random")
         return Info.from_dict(resp)
 
+    async def search(self, query: List[str], offset: int = 0) -> List[Info]:
+        resp = await self.request(
+            "POST",
+            "/hitomi/search",
+            {
+                "query": query,
+                "offset": offset,
+            },
+        )
+        result_list: List[HitomiInfoJSON] = [info for info in resp["result"]]
+        return [Info.from_dict(info) for info in result_list]
+
     async def __aenter__(self) -> "Client":
         return self
 
