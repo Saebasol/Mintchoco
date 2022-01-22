@@ -48,6 +48,10 @@ class Client:
         info_list: List[HitomiInfoJSON] = [info for info in resp["list"]]
         return [Info.from_dict(info) for info in info_list]
 
+    async def random(self) -> Info:
+        resp: HitomiInfoJSON = await self.request("GET", "/hitomi/random")
+        return Info.from_dict(resp)
+
     async def __aenter__(self) -> "Client":
         return self
 
