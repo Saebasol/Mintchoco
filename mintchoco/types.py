@@ -48,8 +48,3 @@ class HitomiInfoJSON(TypedDict):
     character: list[str]
     tags: list[str]
     date: str
-
-
-class HeliotropeImageJSON(TypedDict):
-    name: str
-    url: str
