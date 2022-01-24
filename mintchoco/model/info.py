@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import Optional
 
 from mintchoco.types import HitomiInfoJSON
 
@@ -11,7 +11,7 @@ class Info:
     thumbnail: str
     artist: list[str]
     group: list[str]
-    type: list[str]
+    type: str
     language: Optional[str]
     series: list[str]
     character: list[str]
