@@ -29,6 +29,9 @@ class MintchocoHttp:
             self.client_session = ClientSession()
 
         async with self.client_session.request(method, url, json=json) as resp:
+            if resp.status != 200:
+                return None
+
             return await resp.json()
 
     async def get_galleryinfo(self, index: int) -> Optional[HeliotropeGalleryInfoJSON]:
