@@ -11,7 +11,7 @@ class Info:
     thumbnail: str
     artist: list[str]
     group: list[str]
-    type: Literal["doujinshi", "manga", "artist_CG", "game_CG", "anime"]
+    type: list[str]
     language: Optional[str]
     series: list[str]
     character: list[str]
