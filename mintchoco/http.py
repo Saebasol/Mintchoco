@@ -31,22 +31,24 @@ class MintchocoHttp:
         async with self.client_session.request(method, url, json=json) as resp:
             return await resp.json()
 
-    async def galleryinfo(self, index: int) -> HeliotropeGalleryInfoJSON:
+    async def get_galleryinfo(self, index: int) -> Optional[HeliotropeGalleryInfoJSON]:
         return await self.request("GET", f"/hitomi/galleryinfo/{index}")
 
-    async def image(self, index: int) -> HeliotropeImageJSON:
+    async def get_image(self, index: int) -> Optional[HeliotropeImageJSON]:
         return await self.request("GET", f"/hitomi/image/{index}")
 
-    async def info(self, index: int) -> HeliotropeInfoJSON:
+    async def get_info(self, index: int) -> Optional[HeliotropeInfoJSON]:
         return await self.request("GET", f"/hitomi/info/{index}")
 
-    async def list(self, index: int) -> HeliotropeListJSON:
+    async def get_list(self, index: int) -> HeliotropeListJSON:
         return await self.request("GET", f"/hitomi/list/{index}")
 
-    async def random(self) -> HeliotropeRandomJSON:
+    async def get_random(self) -> HeliotropeRandomJSON:
         return await self.request("GET", "/hitomi/random")
 
-    async def search(self, query: list[str], offset: int = 0) -> HeliotropeSearchJSON:
+    async def get_search(
+        self, query: list[str], offset: int = 0
+    ) -> HeliotropeSearchJSON:
         return await self.request(
             "POST",
             "/hitomi/search",
