@@ -1,77 +1,48 @@
-from types import TracebackType
-from typing import Any, List, Literal, Optional
+from typing import Optional, List
+
 from aiohttp import ClientSession
 
-from mintchoco.model.galleryinfo import Galleryinfo
+from mintchoco.http import MintchocoHttp
+from mintchoco.model.base import (
+    HeliotropeGalleryinfo,
+    HeliotropeImage,
+    HeliotropeInfo,
+    HeliotropeList,
+    HeliotropeSearch,
+)
 from mintchoco.model.image import Image
-from mintchoco.model.info import Info
-from mintchoco.types import HitomiGalleryinfoJSON, HeliotropeImageJSON, HitomiInfoJSON
 
 
-class Client:
-    BASE_URL = "https://api.saebasol.org/api"
-
+class Mintchoco(MintchocoHttp):
     def __init__(self, client_session: Optional[ClientSession] = None) -> None:
-        self.client_session = client_session
+        super().__init__(client_session)
 
-    async def request(
-        self,
-        method: Literal["GET", "POST"],
-        path: str,
-        json: Optional[dict[str, Any]] = None,
-    ) -> Any:
-        url = self.BASE_URL + path
+    async def galleryinfo(self, index: int) -> Optional[HeliotropeGalleryinfo]:
+        if resp := await self.get_galleryinfo(index):
+            return HeliotropeGalleryinfo.from_dict(resp)
+        return None
 
-        if not self.client_session:
-            self.client_session = ClientSession()
+    async def image(self, index: int) -> Optional[Image]:
+        if resp := await self.get_image(index):
+            return HeliotropeImage.from_dict(resp)
+        return None
 
-        async with self.client_session.request(method, url, json=json) as resp:
-            return await resp.json()
+    async def info(self, index: int) -> Optional[HeliotropeInfo]:
+        if resp := await self.get_info(index):
+            return HeliotropeInfo.from_dict(resp)
+        return None
 
-    async def galleryinfo(self, index: int) -> Galleryinfo:
-        resp: HitomiGalleryinfoJSON = await self.request(
-            "GET", f"/hitomi/galleryinfo/{index}"
-        )
-        return Galleryinfo.from_dict(resp)
+    async def list(self, index: int) -> Optional[HeliotropeList]:
+        if resp := await self.get_list(index):
+            return HeliotropeList.from_dict(resp)
+        return None
 
-    async def image(self, index: int) -> List[Image]:
-        resp = await self.request("GET", f"/hitomi/image/{index}")
-        image_list: List[HeliotropeImageJSON] = [x for x in resp["files"]]
-        return [Image.from_dict(image) for image in image_list]
+    async def random(self) -> HeliotropeInfo:
+        return HeliotropeInfo.from_dict(await self.get_random())
 
-    async def info(self, index: int) -> Info:
-        resp: HitomiInfoJSON = await self.request("GET", f"/hitomi/info/{index}")
-        return Info.from_dict(resp)
-
-    async def list(self, index: int) -> List[Info]:
-        resp = await self.request("GET", f"/hitomi/list/{index}")
-        info_list: List[HitomiInfoJSON] = [info for info in resp["list"]]
-        return [Info.from_dict(info) for info in info_list]
-
-    async def random(self) -> Info:
-        resp: HitomiInfoJSON = await self.request("GET", "/hitomi/random")
-        return Info.from_dict(resp)
-
-    async def search(self, query: List[str], offset: int = 0) -> List[Info]:
-        resp = await self.request(
-            "POST",
-            "/hitomi/search",
-            {
-                "query": query,
-                "offset": offset,
-            },
-        )
-        result_list: List[HitomiInfoJSON] = [info for info in resp["result"]]
-        return [Info.from_dict(info) for info in result_list]
-
-    async def __aenter__(self) -> "Client":
-        return self
-
-    async def __aexit__(
-        self,
-        exc_type: Optional[type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
-    ) -> None:
-        if self.client_session:
-            await self.client_session.close()
+    async def search(
+        self, query: List[str], offset: int = 0
+    ) -> Optional[HeliotropeSearch]:
+        if resp := await self.get_search(query, offset):
+            return HeliotropeSearch.from_dict(resp)
+        return None
