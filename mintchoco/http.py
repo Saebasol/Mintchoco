@@ -49,9 +49,7 @@ class MintchocoHttp:
     async def get_random(self) -> HeliotropeRandomJSON:
         return await self.request("GET", "/hitomi/random")
 
-    async def get_search(
-        self, query: list[str], offset: int = 0
-    ) -> HeliotropeSearchJSON:
+    async def get_search(self, query: list[str], offset: int) -> HeliotropeSearchJSON:
         return await self.request(
             "POST",
             "/hitomi/search",
