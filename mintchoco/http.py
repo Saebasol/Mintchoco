@@ -1,7 +1,7 @@
 from types import TracebackType
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional, cast
 from aiohttp import ClientSession
-from mintchoco.base import (
+from mintchoco.base_types import (
     HeliotropeGalleryInfoJSON,
     HeliotropeImageJSON,
     HeliotropeInfoJSON,
@@ -35,28 +35,42 @@ class MintchocoHttp:
             return await resp.json()
 
     async def get_galleryinfo(self, index: int) -> Optional[HeliotropeGalleryInfoJSON]:
-        return await self.request("GET", f"/hitomi/galleryinfo/{index}")
+        return cast(
+            Optional[HeliotropeGalleryInfoJSON],
+            await self.request("GET", f"/hitomi/galleryinfo/{index}"),
+        )
 
     async def get_image(self, index: int) -> Optional[HeliotropeImageJSON]:
-        return await self.request("GET", f"/hitomi/image/{index}")
+        return cast(
+            Optional[HeliotropeImageJSON],
+            await self.request("GET", f"/hitomi/image/{index}"),
+        )
 
     async def get_info(self, index: int) -> Optional[HeliotropeInfoJSON]:
-        return await self.request("GET", f"/hitomi/info/{index}")
+        return cast(
+            Optional[HeliotropeInfoJSON],
+            await self.request("GET", f"/hitomi/info/{index}"),
+        )
 
     async def get_list(self, index: int) -> HeliotropeListJSON:
-        return await self.request("GET", f"/hitomi/list/{index}")
+        return cast(
+            HeliotropeListJSON, await self.request("GET", f"/hitomi/list/{index}")
+        )
 
     async def get_random(self) -> HeliotropeRandomJSON:
-        return await self.request("GET", "/hitomi/random")
+        return cast(HeliotropeRandomJSON, await self.request("GET", "/hitomi/random"))
 
     async def get_search(self, query: list[str], offset: int) -> HeliotropeSearchJSON:
-        return await self.request(
-            "POST",
-            "/hitomi/search",
-            {
-                "query": query,
-                "offset": offset,
-            },
+        return cast(
+            HeliotropeSearchJSON,
+            await self.request(
+                "POST",
+                "/hitomi/search",
+                {
+                    "query": query,
+                    "offset": offset,
+                },
+            ),
         )
 
     async def __aenter__(self) -> "MintchocoHttp":

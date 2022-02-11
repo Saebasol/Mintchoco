@@ -1,18 +1,14 @@
 from dataclasses import dataclass
 
-from mintchoco.base import (
-    HeliotropeGalleryInfoJSON,
+from mintchoco.base_types import (
     HeliotropeImageJSON,
     HeliotropeInfoJSON,
     HeliotropeListJSON,
     HeliotropeSearchJSON,
 )
-from mintchoco.model.galleryinfo import Galleryinfo
-from mintchoco.model.file import File
-from mintchoco.model.image import Image
+from mintchoco.model.image import HeliotropeImageElement, Image
 from mintchoco.model.info import Info
 from mintchoco.model.search import Search
-from mintchoco.model.tag import Tag
 from mintchoco.model.list import List
 
 
@@ -22,46 +18,18 @@ class HeliotropeBaseModel:
 
 
 @dataclass
-class HeliotropeGalleryinfo(HeliotropeBaseModel, Galleryinfo):
-    def to_dict(self) -> HeliotropeGalleryInfoJSON:
-        return HeliotropeGalleryInfoJSON(
-            status=self.status,
-            title=self.title,
-            id=self.id,
-            date=self.date,
-            type=self.type,
-            japanese_title=self.japanese_title,
-            language=self.language,
-            files=[file.to_dict() for file in self.files],
-            language_localname=self.language_localname,
-            tags=[tag.to_dict() for tag in self.tags],
-        )
-
-    @classmethod
-    def from_dict(cls, d: HeliotropeGalleryInfoJSON) -> "HeliotropeGalleryinfo":
-        int_id = int(d["id"])
-        return cls(
-            status=d["status"],
-            id=int_id,
-            title=d["title"],
-            japanese_title=d["japanese_title"],
-            language=d["language"],
-            language_localname=d["language_localname"],
-            type=d["type"],
-            date=d["date"],
-            files=[File.from_dict(int_id, file) for file in d["files"]],
-            tags=[Tag.from_dict(int_id, tag) for tag in d["tags"]],
-        )
-
-
-@dataclass
 class HeliotropeImage(HeliotropeBaseModel, Image):
     def to_dict(self) -> HeliotropeImageJSON:
-        return HeliotropeImageJSON(status=self.status, files=self.files)
+        return HeliotropeImageJSON(
+            status=self.status, files=[file.to_dict() for file in self.files]
+        )
 
     @classmethod
     def from_dict(cls, d: HeliotropeImageJSON) -> "HeliotropeImage":
-        return cls(status=d["status"], files=d["files"])
+        return cls(
+            status=d["status"],
+            files=[HeliotropeImageElement.from_dict(d) for d in d["files"]],
+        )
 
 
 @dataclass
@@ -83,7 +51,7 @@ class HeliotropeInfo(HeliotropeBaseModel, Info):
         )
 
     @classmethod
-    def from_dict(cls, d: HeliotropeInfoJSON) -> "HeliotropeInfo":
+    def from_dict(cls, d: HeliotropeInfoJSON) -> "HeliotropeInfo":  # type: ignore[override]
         return cls(
             status=d["status"],
             id=int(d["id"]),
