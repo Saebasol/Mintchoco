@@ -25,17 +25,13 @@ class Mintchoco(MintchocoHttp):
             return HeliotropeInfo.from_dict(resp)
         return None
 
-    async def list(self, index: int) -> Optional[HeliotropeList]:
-        if resp := await self.get_list(index):
-            return HeliotropeList.from_dict(resp)
-        return None
+    async def list(self, index: int) -> HeliotropeList:
+        resp = await self.get_list(index)
+        return HeliotropeList.from_dict(resp)
 
     async def random(self) -> HeliotropeInfo:
         return HeliotropeInfo.from_dict(await self.get_random())
 
-    async def search(
-        self, query: List[str], offset: int = 0
-    ) -> Optional[HeliotropeSearch]:
-        if resp := await self.get_search(query, offset):
-            return HeliotropeSearch.from_dict(resp)
-        return None
+    async def search(self, query: List[str], offset: int = 0) -> HeliotropeSearch:
+        resp = await self.get_search(query, offset)
+        return HeliotropeSearch.from_dict(resp)
