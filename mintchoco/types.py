@@ -33,7 +33,7 @@ class HitomiArtistsJSON(TypedDict):
     url: str
 
 
-class HitomiCharatersJSON(TypedDict):
+class HitomiCharactersJSON(TypedDict):
     character: str
     url: str
 
@@ -68,7 +68,7 @@ class HitomiGalleryinfoJSON(TypedDict):
     languages: list[HitomiLanguagesJSON]
     # tags
     artists: Optional[list[HitomiArtistsJSON]]
-    characters: Optional[list[HitomiCharatersJSON]]
+    characters: Optional[list[HitomiCharactersJSON]]
     parodys: Optional[list[HitomiParodysJSON]]
     groups: Optional[list[HitomiGroupsJSON]]
     files: list[HitomiFileJSON]
