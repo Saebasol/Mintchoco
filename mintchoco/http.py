@@ -1,6 +1,8 @@
+from platform import python_version
 from types import TracebackType
 from typing import Any, Literal, Optional, cast
-from aiohttp import ClientSession
+from aiohttp import ClientSession, __version__
+from mintchoco import __version__ as mintchoco_version
 from mintchoco.base_types import (
     HeliotropeGalleryInfoJSON,
     HeliotropeImageJSON,
@@ -13,6 +15,7 @@ from mintchoco.base_types import (
 
 class MintchocoHttp:
     BASE_URL = "https://api.saebasol.org/api"
+    UA = f"Mintchoco (https://github.com/Saebasol/Mintchoco {mintchoco_version}) Python/{python_version()} aiohttp/{__version__}"
 
     def __init__(self, client_session: Optional[ClientSession] = None) -> None:
         self.client_session = client_session
@@ -26,7 +29,7 @@ class MintchocoHttp:
         url = self.BASE_URL + path
 
         if not self.client_session:
-            self.client_session = ClientSession()
+            self.client_session = ClientSession(headers={"user-agent": self.UA})
 
         async with self.client_session.request(method, url, json=json) as resp:
             if resp.status != 200:
