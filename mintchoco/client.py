@@ -33,5 +33,5 @@ class Mintchoco(MintchocoHttp):
         return HeliotropeInfo.from_dict(await self.get_random())
 
     async def search(self, query: List[str], offset: int = 0) -> HeliotropeSearch:
-        resp = await self.get_search(query, offset)
+        resp = await self.post_search(query, offset)
         return HeliotropeSearch.from_dict(resp)

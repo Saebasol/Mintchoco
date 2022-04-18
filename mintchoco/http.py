@@ -31,7 +31,9 @@ class MintchocoHttp:
         if not self.client_session:
             self.client_session = ClientSession()
 
-        async with self.client_session.request(method, url, json=json, headers={"user-agent": self.UA}) as resp:
+        async with self.client_session.request(
+            method, url, json=json, headers={"user-agent": self.UA}
+        ) as resp:
             if resp.status != 200:
                 return None
 
@@ -63,7 +65,7 @@ class MintchocoHttp:
     async def get_random(self) -> HeliotropeRandomJSON:
         return cast(HeliotropeRandomJSON, await self.request("GET", "/hitomi/random"))
 
-    async def get_search(self, query: list[str], offset: int) -> HeliotropeSearchJSON:
+    async def post_search(self, query: list[str], offset: int) -> HeliotropeSearchJSON:
         return cast(
             HeliotropeSearchJSON,
             await self.request(
