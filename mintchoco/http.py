@@ -29,9 +29,9 @@ class MintchocoHttp:
         url = self.BASE_URL + path
 
         if not self.client_session:
-            self.client_session = ClientSession(headers={"user-agent": self.UA})
+            self.client_session = ClientSession()
 
-        async with self.client_session.request(method, url, json=json) as resp:
+        async with self.client_session.request(method, url, json=json, headers={"user-agent": self.UA}) as resp:
             if resp.status != 200:
                 return None
 
